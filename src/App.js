@@ -12,6 +12,7 @@ class App extends Component {
 
     super();
     this.state = {
+      editnoteID: null,
       action: 'add',
       editMessage : '',
       noteList: []
@@ -39,7 +40,17 @@ class App extends Component {
           aux.splice(i, 1);
         }
       }
-      this.setState({noteList: aux,action: 'add', editMessage: ''});  
+      this.setState({noteList: aux, editnoteID: null, action: 'add', editMessage: ''});  
+    });
+
+    firebase.database().ref().child('notes').on('child_changed', snapshot =>{
+      let aux = this.state.noteList;
+      for(var i=0; i < aux.length; i++){
+        if(aux[i].id === snapshot.key){
+          aux[i].data = snapshot.val();
+        }
+      }
+      this.setState({noteList: aux, editnoteID: null, action: 'add', editMessage: ''});
     });
   }
 
@@ -73,14 +84,19 @@ class App extends Component {
     const childEdit = dbRef.child(noteID);
     childEdit.once('value', snapshot =>{
       let message = snapshot.val().message;
-      this.setState({action: 'edit', editMessage: message});
+      this.setState({action: 'edit', editMessage: message, editnoteID: noteID});
     });
     
   }
 
   updateNote(newData){
-    console.log(newData);
-    this.setState({action: 'add', editMessage: ''});
+    if(newData.id !== null){
+      const dbRef = firebase.database().ref().child('notes');
+      const childUpdate = dbRef.child(newData.id);
+      childUpdate.update({message: newData.newMessage})
+        .then(() => {this.setState({editnoteID: null,action: 'add', editMessage: ''})})
+        .catch(error => {console.log(`Error ${error.code}: ${error.message}`)});
+    }
   }
 
   render() {
@@ -94,7 +110,8 @@ class App extends Component {
         </div>
         <div className='notesFooter'>
           <NoteForm addNote={this.addNote} updateNote={this.updateNote} 
-                    action={this.state.action} message={this.state.editMessage}/>
+                    action={this.state.action} message={this.state.editMessage}
+                    noteID={this.state.editnoteID}/>
         </div> 
       </div>
     );

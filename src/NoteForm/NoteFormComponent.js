@@ -6,6 +6,7 @@ class NoteForm extends Component{
         super(props);
             
         this.state = {
+            noteID: this.props.noteID,
             action: this.props.action,
             textContet: ''
         };
@@ -17,10 +18,10 @@ class NoteForm extends Component{
     }
 
     componentWillReceiveProps(nextProps){
-        console.log('CWP');
         if( this.state.action !== nextProps.action ||
             this.state.message !== nextProps.message){
-                this.setState({textContet: nextProps.message,
+                this.setState({noteID: nextProps.noteID,
+                               textContet: nextProps.message,
                                action: nextProps.action});
         }
     }
@@ -43,7 +44,7 @@ class NoteForm extends Component{
         }
         else{
             const newData = {
-                id: '',
+                id: this.state.noteID,
                 newMessage: this.state.textContet
             }
 
@@ -78,11 +79,9 @@ class NoteForm extends Component{
 
     render(){
         if(this.state.action === 'add'){
-            console.log('add note');
             return(this.renderAddNote());
         }
         else{
-            console.log('edit note');
             return(this.renderEditNote());
         }
     }

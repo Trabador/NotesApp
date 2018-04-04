@@ -15,6 +15,16 @@ class Note extends Component{
         this.handleRemove = this.handleRemove.bind(this);
     }
 
+    componentWillReceiveProps(nextProps){
+        if(this.state.message !== nextProps.message){
+            this.setState({message: nextProps.message});
+        }
+    }
+
+    shouldComponentUpdate(nextProps, nextState){
+        return(this.state.message !== nextState.message);
+    }
+
     handleEdit(){
         const noteID = this.state.id;
         this.props.editNote(noteID);
