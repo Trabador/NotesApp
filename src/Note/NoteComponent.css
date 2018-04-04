@@ -30,15 +30,33 @@
     display: block;
   }
   
-  .closebtn {
+  .deletebtn {
       color: #AA9;
       font-weight: bold;
       float: right;
       cursor: pointer;
       font-size: 1.3em;
   }
-  
-  .closebtn:hover {
-      color: #AC2500;
+
+  .editbtn {
+    color: #AA9;
+    font-weight: bold;
+    float: right;
+    cursor: pointer;
+    font-size: 1.3em;
   }
+
+  
+  .deletebtn:hover {
+      color: #AC2500;
+      background: red;
+  }
+
+  .editbtn:hover {
+      color: aqua;
+      background: aqua;
+  }
+
+
+
 

@@ -12,12 +12,16 @@ class App extends Component {
 
     super();
     this.state = {
+      action: 'add',
+      editMessage : '',
       noteList: []
     };
 
     this.displayNotes = this.displayNotes.bind(this);
     this.addNote = this.addNote.bind(this);
     this.removeNote = this.removeNote.bind(this);
+    this.editNote = this.editNote.bind(this);
+    this.updateNote = this.updateNote.bind(this);
   }
 
   componentWillMount(){
@@ -35,15 +39,16 @@ class App extends Component {
           aux.splice(i, 1);
         }
       }
-      this.setState({noteList: aux});  
+      this.setState({noteList: aux,action: 'add', editMessage: ''});  
     });
   }
 
   displayNotes(){
     return(
       this.state.noteList.map(note => {
-        return(<Note message={note.data.message} id={note.id}
-                     key={note.id} removeNote={() => this.removeNote(note.id)}/>
+        return(<Note message={note.data.message} id={note.id} key={note.id} 
+                     removeNote={this.removeNote}
+                     editNote={this.editNote}/>
         )
       })
     );
@@ -59,8 +64,23 @@ class App extends Component {
     const dbRef = firebase.database().ref().child('notes');
     const childToRemove= dbRef.child(noteID);
     childToRemove.remove()
-      .then(() => {console.log(`child removed: ${noteID}`)})
-      .catch(error => {console.log(`Error ${error.code}: ${error.message}`)});
+      .then(() => {console.log(`child removed: ${noteID}`);})
+      .catch(error => {console.log(`Error ${error.code}: ${error.message}`);});
+  }
+
+  editNote(noteID){
+    const dbRef = firebase.database().ref().child('notes');
+    const childEdit = dbRef.child(noteID);
+    childEdit.once('value', snapshot =>{
+      let message = snapshot.val().message;
+      this.setState({action: 'edit', editMessage: message});
+    });
+    
+  }
+
+  updateNote(newData){
+    console.log(newData);
+    this.setState({action: 'add', editMessage: ''});
   }
 
   render() {
@@ -73,7 +93,8 @@ class App extends Component {
           {this.displayNotes()}
         </div>
         <div className='notesFooter'>
-          <NoteForm addNote={this.addNote}/>
+          <NoteForm addNote={this.addNote} updateNote={this.updateNote} 
+                    action={this.state.action} message={this.state.editMessage}/>
         </div> 
       </div>
     );
