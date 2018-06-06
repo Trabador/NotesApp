@@ -15,10 +15,18 @@
     transition: 0.2s ease-out;
 }
 
+.noteButton:disabled{
+    background-color: #929292;
+}
+
 .noteButton:hover{
     background-color: #02BA85;
     color: #fff;
     transition: 0.2s ease-out;
+}
+
+.noteButton[disabled]:hover{
+    background-color: #929292;
 }
 
 .noteInput{

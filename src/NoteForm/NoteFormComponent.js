@@ -13,8 +13,7 @@ class NoteForm extends Component{
         
         this.handleUserInputData = this.handleUserInputData.bind(this);
         this.handleSendTextData = this.handleSendTextData.bind(this);
-        this.renderAddNote = this.renderAddNote.bind(this);
-        this.renderEditNote = this.renderEditNote.bind(this);
+        this.renderButton = this.renderButton.bind(this);
     }
 
     componentWillReceiveProps(nextProps){
@@ -26,30 +25,34 @@ class NoteForm extends Component{
         }
     }
 
-
-
     handleUserInputData(event){
-        this.setState({
-            textContet: event.target.value
-        });
+        let messageText = event.target.value;
+        if(messageText !== ''){
+            this.setState({
+                textContet: event.target.value
+            });
+        }
+        else{
+            this.setState({textContet: null});
+        }
     }
 
     handleSendTextData(){
-        if(this.state.action === 'add'){
-            const newRecord = {
-                message: this.state.textContet
-            };
-
-            this.props.addNote(newRecord);
-        }
-        else{
-            const newData = {
-                id: this.state.noteID,
-                newMessage: this.state.textContet
+            if(this.state.action === 'add'){
+                const newRecord = {
+                    message: this.state.textContet
+                };
+    
+                this.props.addNote(newRecord);
             }
-
-            this.props.updateNote(newData);
-        }
+            else{
+                const newData = {
+                    id: this.state.noteID,
+                    newMessage: this.state.textContet
+                }
+    
+                this.props.updateNote(newData);
+            }
         
         this.setState({
             action: 'add',
@@ -57,33 +60,27 @@ class NoteForm extends Component{
         });
     }
 
-    renderAddNote(){
+    renderButton(){
+        let buttonText = null;
+        if(this.state.action === 'add'){
+            buttonText = 'Agregar';
+        }
+        else{
+            buttonText = 'Actualizar';
+        }
         return(
             <div className='formWrapper'>
                 <input className='noteInput' placeholder='Escribe una nueva nota aqui ... '
                      value={this.state.textContet} onChange={this.handleUserInputData}/>
-                <button className='noteButton' onClick={this.handleSendTextData}>Agregar Nueva</button>
-            </div>
-        );
-    }
-
-    renderEditNote(message){
-        return(
-            <div className='formWrapper'>
-                <input className='noteInput' 
-                     value={this.state.textContet} onChange={this.handleUserInputData}/>
-                <button className='noteButton' onClick={this.handleSendTextData}>Actualizar</button>
+                <button className='noteButton' onClick={this.handleSendTextData} disabled={!this.state.textContet}>
+                    {buttonText}
+                </button>
             </div>
         );
     }
 
     render(){
-        if(this.state.action === 'add'){
-            return(this.renderAddNote());
-        }
-        else{
-            return(this.renderEditNote());
-        }
+        return(this.renderButton());
     }
 }
 
