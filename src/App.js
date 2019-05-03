@@ -29,18 +29,16 @@ class App extends Component {
     firebase.database().ref().child('notes').on('child_added', snapshot =>{
       let note = {data: snapshot.val(), id: snapshot.key};
       this.setState({
-        noteList: this.state.noteList.concat(note)
+        noteList: [note, ...this.state.noteList]
       });
     });
 
     firebase.database().ref().child('notes').on('child_removed', snapshot =>{
-      let aux = this.state.noteList;
-      for(var i=0; i < aux.length; i++){
-        if(aux[i].id === snapshot.key){
-          aux.splice(i, 1);
-        }
-      }
-      this.setState({noteList: aux, editnoteID: null, action: 'add', editMessage: ''});  
+      this.setState({
+        noteList: this.state.noteList.filter(note => note.id !== snapshot.key), 
+        editnoteID: null, 
+        action: 'add', 
+        editMessage: ''});  
     });
 
     firebase.database().ref().child('notes').on('child_changed', snapshot =>{
@@ -48,6 +46,7 @@ class App extends Component {
       for(var i=0; i < aux.length; i++){
         if(aux[i].id === snapshot.key){
           aux[i].data = snapshot.val();
+          break;
         }
       }
       this.setState({noteList: aux, editnoteID: null, action: 'add', editMessage: ''});
@@ -69,13 +68,17 @@ class App extends Component {
     const dbRef = firebase.database().ref().child('notes');
     const newNote = dbRef.push();
     newNote.set(newRecord);
+    this.showNotification("Note added");
   }
 
   removeNote(noteID){
     const dbRef = firebase.database().ref().child('notes');
     const childToRemove= dbRef.child(noteID);
     childToRemove.remove()
-      .then(() => {console.log(`child removed: ${noteID}`);})
+      .then(() => {
+        console.log(`child removed: ${noteID}`);
+        this.showNotification("Note Removed");
+      })
       .catch(error => {console.log(`Error ${error.code}: ${error.message}`);});
   }
 
@@ -94,9 +97,21 @@ class App extends Component {
       const dbRef = firebase.database().ref().child('notes');
       const childUpdate = dbRef.child(newData.id);
       childUpdate.update({message: newData.newMessage})
-        .then(() => {this.setState({editnoteID: null,action: 'add', editMessage: ''})})
+        .then(() => {
+          this.setState({editnoteID: null,action: 'add', editMessage: ''})
+          this.showNotification("Note Updated");
+        })
         .catch(error => {console.log(`Error ${error.code}: ${error.message}`)});
     }
+  }
+
+  showNotification = (text) => {
+    let notification = document.getElementById('notification');
+    notification.className = "show";
+    notification.innerText = text;
+    setTimeout(() => {
+      notification.className = notification.className.replace("show","");
+    }, 1500);
   }
 
   render() {
@@ -105,6 +120,7 @@ class App extends Component {
         <header className="notesHeader">
           <div className="heading">Notes in React</div>
         </header>
+        <div id="notification"></div>
         <div className='notesBody'>
           {this.displayNotes()}
         </div>

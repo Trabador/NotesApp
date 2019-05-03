@@ -63,14 +63,14 @@ class NoteForm extends Component{
     renderButton(){
         let buttonText = null;
         if(this.state.action === 'add'){
-            buttonText = 'Agregar';
+            buttonText = 'Add New';
         }
         else{
-            buttonText = 'Actualizar';
+            buttonText = 'Update';
         }
         return(
             <div className='formWrapper'>
-                <input className='noteInput' placeholder='Escribe una nueva nota aqui ... '
+                <input className='noteInput' placeholder='Write a new note ... '
                      value={this.state.textContet} onChange={this.handleUserInputData}/>
                 <button className='noteButton' onClick={this.handleSendTextData} disabled={!this.state.textContet}>
                     {buttonText}
