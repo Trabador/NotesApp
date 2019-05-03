@@ -76,7 +76,6 @@ class App extends Component {
     const childToRemove= dbRef.child(noteID);
     childToRemove.remove()
       .then(() => {
-        console.log(`child removed: ${noteID}`);
         this.showNotification("Note Removed");
       })
       .catch(error => {console.log(`Error ${error.code}: ${error.message}`);});
