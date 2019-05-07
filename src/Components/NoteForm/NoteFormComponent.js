@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux';
-import {  modifyNote , addNoteModified} from '../../actions/notesActions';
-import firebase from 'firebase/app';
+import { insertNewNote, modifyNote } from '../../actions/notesActions';
 import './NoteFormComponent.css';
 
 class NoteForm extends Component{
@@ -17,14 +16,12 @@ class NoteForm extends Component{
         this.handleUserInputData = this.handleUserInputData.bind(this);
         this.handleSendTextData = this.handleSendTextData.bind(this);
         this.renderButton = this.renderForm.bind(this);
-        this.modifyDatabase = this.modifyNote.bind(this);
-        this.insertNewNote = this.insertNewNote.bind(this);
     }
 
     componentWillReceiveProps(nextProps){
         if(this.state.action !== nextProps.action || 
             this.state.textContet !== nextProps.textContet ||
-            this.state.noteID !== nextProps.id){
+            this.state.noteID !== nextProps.id) {
             this.setState({
                 noteID: nextProps.id,
                 action: nextProps.action,
@@ -46,52 +43,34 @@ class NoteForm extends Component{
     }
 
     handleSendTextData(){
-            if(this.state.action === 'add'){
-                const newRecord = {
-                    message: this.state.textContet
-                };
-                this.insertNewNote(newRecord);
+        if(this.state.action === 'add'){
+            const newRecord = {
+                message: this.state.textContet
+            };
+            this.props.insertNewNote(newRecord);
+            this.showMessage('Note Added');
+        }
+        else{
+            const newData = {
+                id: this.state.noteID,
+                newMessage: this.state.textContet
             }
-            else{
-                const newData = {
-                    id: this.state.noteID,
-                    newMessage: this.state.textContet
-                }
-                this.modifyNote(newData);
-            }
-        
+            this.props.modifyNote(newData);
+            this.showMessage('Note Updated');
+        }
         this.setState({
             action: 'add',
-            textContet: ''
+            textContet: '',
+            noteID: null
         });
-    }
-
-    insertNewNote(newRecord){
-        const dbRef = firebase.database().ref().child('notes');
-        const newNote = dbRef.push();
-        newNote.set(newRecord);
-        this.showMessage("Note Added");
-    }
-
-    modifyNote({id, newMessage}) {
-        if(id !== null){
-            const dbRef = firebase.database().ref().child('notes');
-            const childUpdate = dbRef.child(id);
-            childUpdate.update({message: newMessage})
-              .then(() => {
-                  console.log(`Child ${id} updated`);
-                  this.showMessage("Note Updated");
-              })
-              .catch(error => {console.log(`Error ${error.code}: ${error.message}`)});
-        }
-    }
+    }    
 
     showMessage = (messageText) => {
-        let snackBar = document.getElementById('snackbar');
-        snackBar.className = "show";
-        snackBar.innerText = `${messageText}`;
+        let notification = document.getElementById('notification');
+        notification.className = "show";
+        notification.innerText = `${messageText}`;
         setTimeout(() => { 
-            snackBar.className = snackBar.className.replace("show", ""); 
+            notification.className = notification.className.replace("show", ""); 
         }, 1500);
     }
 
@@ -126,4 +105,4 @@ const mapStateToProps = state => ({
     id: state.notes.editNoteID
 });
 
-export default connect(mapStateToProps,{modifyNote,addNoteModified})(NoteForm);
+export default connect(mapStateToProps,{insertNewNote,modifyNote})(NoteForm);

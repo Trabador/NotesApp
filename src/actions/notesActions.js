@@ -1,4 +1,4 @@
-import { FETCH_NOTES, DELETE_NOTE, UPDATE_NOTE, EDIT_NOTE, ADD_NOTE , ADD_MODIFIED} from './types';
+import { FETCH_NOTES, DELETE_NOTE, EDIT_NOTE, ADD_NOTE , ADD_MODIFIED, RESET_FORM} from './types';
 import firebase from 'firebase/app';
 
 /*Returns all notes from DB*/
@@ -31,6 +31,28 @@ export const addNoteModified = (notes) => dispatch => {
     });
 }
 
+/*Delete note from the state */
+export const removeNote = (id) => dispatch => {
+    dispatch({
+        type: DELETE_NOTE,
+        payload: {id: id}
+    });
+}
+
+/*Insert new note in database */
+export const insertNewNote = (newRecord) => dispatch => {
+    const dbRef = firebase.database().ref().child('notes');
+    const newNote = dbRef.push();
+    newNote.set(newRecord)
+        .then(() => {
+            dispatch({
+                type: RESET_FORM,
+                payload: {editNoteID: null,action: 'add', editMessage: ''}
+            });
+        })
+        .catch(error => {console.log(`Error ${error.code}: ${error.message}`);});
+}
+
 /*Delete selected note from DB via ID*/
 export const deleteNote = (noteID) => dispatch => {
     const dbRef = firebase.database().ref().child('notes');
@@ -39,8 +61,8 @@ export const deleteNote = (noteID) => dispatch => {
       .then(() => {
           console.log(`child removed: ${noteID}`);
           dispatch({
-              type: DELETE_NOTE,
-              payload: {id: noteID, editNoteID: null,action: 'add', editMessage: ''}
+              type: RESET_FORM,
+              payload: {editNoteID: null,action: 'add', editMessage: ''}
           });
         })
       .catch(error => {console.log(`Error ${error.code}: ${error.message}`);});
@@ -53,8 +75,9 @@ export const modifyNote = ({ id, newMessage }) => dispatch => {
         const childUpdate = dbRef.child(id);
         childUpdate.update({message: newMessage})
           .then(() => {
+                console.log(`Child ${id} updated`);
                 dispatch({
-                    type: UPDATE_NOTE,
+                    type: RESET_FORM,
                     payload: {editNoteID: null,action: 'add', editMessage: ''}
                 });
           })
@@ -62,7 +85,8 @@ export const modifyNote = ({ id, newMessage }) => dispatch => {
     }
 }
 
-/*Search the selected note to and set the data in the form to modify the message */
+
+/*Search the selected note to edit and set the data in the form to modify the message */
 export const editNote = (noteID) => dispatch => {
     const dbRef = firebase.database().ref().child('notes');
     const childEdit = dbRef.child(noteID);

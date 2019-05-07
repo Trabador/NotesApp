@@ -39,7 +39,7 @@ class Note extends Component{
     }
 
     showMessage = (messageText) => {
-        let snackBar = document.getElementById('snackbar');
+        let snackBar = document.getElementById('notification');
         snackBar.className = "show";
         snackBar.innerText = `${messageText}`;
         setTimeout(() => { 

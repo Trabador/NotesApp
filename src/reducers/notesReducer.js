@@ -1,4 +1,4 @@
-import { FETCH_NOTES, DELETE_NOTE, UPDATE_NOTE, EDIT_NOTE, ADD_NOTE, ADD_MODIFIED} from '../actions/types';
+import { FETCH_NOTES, DELETE_NOTE, EDIT_NOTE, ADD_NOTE, ADD_MODIFIED, RESET_FORM} from '../actions/types';
 
 
 const initialState = {
@@ -21,8 +21,6 @@ export default function(state = initialState, action){
                 noteList: [action.payload,...state.noteList]
             };
         case ADD_MODIFIED:
-            console.log('mod');
-            console.log(action.payload);
             return{
                 ...state,
                 noteList: action.payload.notes,
@@ -34,20 +32,15 @@ export default function(state = initialState, action){
             return {
                 ...state,
                 noteList: state.noteList.filter(note => note.id !== action.payload.id),
-                action: action.payload.action,
-                editNoteID: action.payload.editNoteID,
-                editMessage: action.payload.editMessage
             };
-        case UPDATE_NOTE:
-            console.log('upd')
-            console.log(action.payload)
+        case EDIT_NOTE:
             return {
                 ...state,
                 action: action.payload.action,
-                editNoteID: action.payload.editNoteID,
-                editMessage: action.payload.editMessage
+                editMessage: action.payload.editMessage, 
+                editNoteID: action.payload.editNoteID
             };
-        case EDIT_NOTE:
+        case RESET_FORM:
             return {
                 ...state,
                 action: action.payload.action,
