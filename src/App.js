@@ -49,15 +49,6 @@ class App extends Component {
 
   render() {
     return (
-<<<<<<< HEAD
-      <div className="notesWrapper">
-        <header className="notesHeader">
-          <div className="heading">Notes in React</div>
-        </header>
-        <div id="notification"></div>
-        <div className='notesBody'>
-          {this.displayNotes()}
-=======
         <div className="notesWrapper">
           <header className="notesHeader">
             <div className="heading">Notes in React test</div>
@@ -67,7 +58,6 @@ class App extends Component {
           <div className='notesFooter'>
             <NoteForm />
           </div> 
->>>>>>> testRedux
         </div>
     );
   }
