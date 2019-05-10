@@ -1,0 +1,30 @@
+.signin{
+    left: 30%;
+    top: 5%;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 20px 25px;
+    border: 5px solid #26a69a;
+    width: 550px;
+    height: auto;
+    box-sizing: border-box;
+    position: relative;
+}
+  
+.signin > div .row{
+    height: auto;
+}
+
+.errors{
+    color: black;
+    display: flex;
+    flex-direction: row;
+    text-align: justify;
+}
+
+.error-message{
+    margin-left: 0.2rem;
+}
+
+.btn-custom{
+    width: 100%;
+}
