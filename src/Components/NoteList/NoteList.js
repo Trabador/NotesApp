@@ -33,7 +33,10 @@ class NoteList extends Component{
                 </div>
             );
         }
-        return <h2>Loading</h2>;
+        const style = {
+            textAlign: 'center'
+        }
+        return <h2 style={style}>Loading</h2>;
     }
 }
 

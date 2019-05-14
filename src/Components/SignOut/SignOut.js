@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import firebase from '../../Config/dbConfig';
+import './SignOut.css';
 
 class SignOut extends Component {
 
@@ -10,7 +11,7 @@ class SignOut extends Component {
     render() {
         return(
             <div>
-                <button className="btn mdc-button--outlined" onClick={this.handleSignOut}>
+                <button className="btn mdc-button--outlined signout" onClick={this.handleSignOut}>
                     <span>LogOut</span>
                 </button>
             </div>
