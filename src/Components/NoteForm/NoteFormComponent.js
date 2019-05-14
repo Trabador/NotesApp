@@ -47,7 +47,7 @@ class NoteForm extends Component{
             const newRecord = {
                 message: this.state.textContet
             };
-            this.props.insertNewNote(newRecord);
+            this.props.insertNewNote(newRecord, this.props.user);
             this.showMessage('Note Added');
         }
         else{
@@ -55,7 +55,7 @@ class NoteForm extends Component{
                 id: this.state.noteID,
                 newMessage: this.state.textContet
             }
-            this.props.modifyNote(newData);
+            this.props.modifyNote(newData, this.props.user);
             this.showMessage('Note Updated');
         }
         this.setState({
@@ -99,10 +99,10 @@ class NoteForm extends Component{
 }
 
 const mapStateToProps = state => ({
-    noteList: state.notes.noteList,
     textContet: state.notes.editMessage,
     action: state.notes.action,
-    id: state.notes.editNoteID
+    id: state.notes.editNoteID,
+    user: state.firebase.auth
 });
 
 export default connect(mapStateToProps,{insertNewNote,modifyNote})(NoteForm);

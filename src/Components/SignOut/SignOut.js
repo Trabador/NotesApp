@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import firebase from '../../Config/dbConfig';
-import { logOutUSer } from '../../actions/userActions';
-import { connect  } from 'react-redux';
 
 class SignOut extends Component {
 
     handleSignOut = () => {
         firebase.auth().signOut();
-        this.props.logOutUSer();
     }
 
     render() {
@@ -21,4 +18,4 @@ class SignOut extends Component {
     }
 }
 
-export default connect(null, { logOutUSer })(SignOut);
+export default SignOut;

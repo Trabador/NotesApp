@@ -1,9 +1,10 @@
 /*Types for action dispatchs in notes reducer*/
-export const FETCH_NOTES = 'FETCH_NOTES';
-export const DELETE_NOTE = 'DELETE_NOTE';
 export const EDIT_NOTE = 'EDIT_NOTE';
-export const ADD_NOTE = 'ADD_NOTE';
-export const ADD_MODIFIED = 'ADD_MODIFIED';
 export const RESET_FORM = 'RESET_FORM';
-export const LOGOUT_USER = 'LOGOUT_USER';
-export const LOG_USER = 'LOG_USER';
+export const RESET_APP = 'RESET_APP';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGIN_FAIL = 'LOGIN_FAIL';
+export const SIGNIN_SUCCESS = 'SIGNIN_SUCCESS';
+export const SIGNIN_FAIL = 'SIGNIN_FAIL';
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
+export const LOGOUT_FAIL = 'LOGOUT_FAIL';

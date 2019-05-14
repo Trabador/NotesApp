@@ -1,40 +1,32 @@
 import React, { Component } from 'react';
+import Header from '../Header/Header';
 import NoteList from '../NoteList/NoteList';
 import NoteForm from '../NoteForm/NoteFormComponent';
 import { connect } from 'react-redux';
-import firebase from '../../Config/dbConfig';
-import { logUser, logOutUSer } from '../../actions/userActions';
+import { Redirect } from 'react-router-dom';
 
 class NotesApp extends Component {
 
-    componentDidMount() {
-        firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-                const current = { uid: user.uid, email: user.email }
-                this.props.logUser(current);
-            }
-            else {
-                this.props.logOutUSer();
-                this.props.history.push('/login');
-            }
-        });
-    }
-
     render() {
+        if (this.props.user.isEmpty)
+            return <Redirect to="/login" />
         return (
-            <React.Fragment>
-                <div id="notification"></div>
-                <NoteList />
-                <div className='notesFooter'>
-                    <NoteForm />
-                </div>
-            </React.Fragment>
+            <div className="notesWrapper">
+                <Header />
+                <React.Fragment>
+                    <div id="notification"></div>
+                    <NoteList />
+                    <div className='notesFooter'>
+                        <NoteForm />
+                    </div>
+                </React.Fragment>
+            </div>
         );
     }
 }
 
 const mapStateToProps = state => ({
-    user: state.users.user
+    user: state.firebase.auth,
 })
 
-export default connect(mapStateToProps, { logUser, logOutUSer })(NotesApp);
+export default connect(mapStateToProps)(NotesApp);

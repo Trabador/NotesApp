@@ -29,12 +29,12 @@ class Note extends Component{
 
     handleEdit(){
         const noteID = this.state.id;
-        this.props.editNote(noteID);
+        this.props.editNote(noteID, this.props.user);
     }
 
     handleRemove(){
         const noteID = this.state.id;
-        this.props.deleteNote(noteID);
+        this.props.deleteNote(noteID, this.props.user);
         this.showMessage("Note Removed");
     }
 
@@ -66,5 +66,8 @@ class Note extends Component{
     }
 }
 
+const mapStateToProps = (state) => ({
+    user: state.firebase.auth
+});
 
-export default connect(null,{ deleteNote, editNote })(Note);
+export default connect(mapStateToProps,{ deleteNote, editNote })(Note);
